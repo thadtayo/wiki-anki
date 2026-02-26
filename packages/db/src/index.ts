@@ -1,2 +1,2 @@
-export * from "drizzle-orm/sql";
-export { alias } from "drizzle-orm/pg-core";
+export { Prisma, PrismaClient } from "@prisma/client";
+export type { Post, User, Session, Account, Verification } from "@prisma/client";

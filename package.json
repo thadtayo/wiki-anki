@@ -10,7 +10,7 @@
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
-    "auth:generate": "pnpm -F @acme/auth generate",
+    "db:generate": "turbo -F @acme/db generate",
     "db:push": "turbo -F @acme/db push",
     "db:studio": "turbo -F @acme/db studio",
     "dev": "turbo watch dev --continue",
@@ -33,6 +33,13 @@
     "prettier": "catalog:",
     "turbo": "^2.5.8",
     "typescript": "catalog:"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
+    ]
   },
   "prettier": "@acme/prettier-config"
 }

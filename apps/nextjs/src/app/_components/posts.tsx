@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-query";
 
 import type { RouterOutputs } from "@acme/api";
-import { CreatePostSchema } from "@acme/db/schema";
+import { z } from "zod/v4";
 import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import {
@@ -49,7 +49,10 @@ export function CreatePostForm() {
       title: "",
     },
     validators: {
-      onSubmit: CreatePostSchema,
+      onSubmit: z.object({
+        title: z.string().max(256),
+        content: z.string().max(256),
+      }),
     },
     onSubmit: (data) => createPost.mutate(data.value),
   });
