@@ -100,26 +100,112 @@ function CreatePost() {
 
 function MobileAuth() {
   const { data: session } = authClient.useSession();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  if (session) {
+    return (
+      <>
+        <Text className="text-foreground pb-2 text-center text-xl font-semibold">
+          Hello, {session.user.name}
+        </Text>
+        <Pressable
+          onPress={() => authClient.signOut()}
+          className="bg-primary flex items-center rounded-sm p-2"
+        >
+          <Text>Sign Out</Text>
+        </Pressable>
+      </>
+    );
+  }
+
+  const handleSubmit = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      if (isSignUp) {
+        const res = await authClient.signUp.email({
+          email,
+          password,
+          name,
+        });
+        if (res.error) {
+          setError(res.error.message ?? "Sign up failed");
+          return;
+        }
+      } else {
+        const res = await authClient.signIn.email({
+          email,
+          password,
+        });
+        if (res.error) {
+          setError(res.error.message ?? "Sign in failed");
+          return;
+        }
+      }
+    } catch {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
+    <View className="flex gap-2">
       <Text className="text-foreground pb-2 text-center text-xl font-semibold">
-        {session?.user.name ? `Hello, ${session.user.name}` : "Not logged in"}
+        {isSignUp ? "Sign Up" : "Sign In"}
       </Text>
+      {isSignUp && (
+        <TextInput
+          className="border-input bg-background text-foreground items-center rounded-md border px-3 text-lg leading-tight"
+          value={name}
+          onChangeText={setName}
+          placeholder="Name"
+          autoCapitalize="words"
+        />
+      )}
+      <TextInput
+        className="border-input bg-background text-foreground items-center rounded-md border px-3 text-lg leading-tight"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
+      <TextInput
+        className="border-input bg-background text-foreground items-center rounded-md border px-3 text-lg leading-tight"
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Password"
+        secureTextEntry
+      />
+      {error && <Text className="text-destructive">{error}</Text>}
       <Pressable
-        onPress={() =>
-          session
-            ? authClient.signOut()
-            : authClient.signIn.social({
-                provider: "discord",
-                callbackURL: "/",
-              })
-        }
+        onPress={handleSubmit}
+        disabled={loading}
         className="bg-primary flex items-center rounded-sm p-2"
       >
-        <Text>{session ? "Sign Out" : "Sign In With Discord"}</Text>
+        <Text>
+          {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
+        </Text>
       </Pressable>
-    </>
+      <Pressable
+        onPress={() => {
+          setIsSignUp(!isSignUp);
+          setError(null);
+        }}
+      >
+        <Text className="text-foreground text-center text-sm underline">
+          {isSignUp
+            ? "Already have an account? Sign in"
+            : "Don't have an account? Sign up"}
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 
