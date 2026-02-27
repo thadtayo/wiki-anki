@@ -232,6 +232,14 @@ export default function Index() {
 
         <MobileAuth />
 
+        <Link asChild href="/generate">
+          <Pressable className="my-2 items-center">
+            <Text className="text-primary text-lg font-semibold underline">
+              Generate Flashcards from Wikipedia
+            </Text>
+          </Pressable>
+        </Link>
+
         <View className="py-2">
           <Text className="text-primary font-semibold italic">
             Press on a post
