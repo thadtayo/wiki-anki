@@ -23,7 +23,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0"
+    "@prisma/client": "^6.19.2"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
@@ -31,7 +31,7 @@
     "@acme/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "prisma": "^6.5.0",
+    "prisma": "^6.19.2",
     "typescript": "catalog:"
   },
   "prettier": "@acme/prettier-config"

@@ -65,17 +65,31 @@ function QuestionCard({ question, index }: { question: Question; index: number }
 function QuestionList({
   title,
   questions,
+  onSendToEmail,
+  isSending,
 }: {
   title: string;
   questions: Question[];
+  onSendToEmail: () => void;
+  isSending: boolean;
 }) {
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex items-baseline justify-between">
         <h2 className="text-primary text-2xl font-bold">{title}</h2>
-        <span className="text-muted-foreground text-sm">
-          {questions.length} questions
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-muted-foreground text-sm">
+            {questions.length} questions
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={isSending}
+            onClick={onSendToEmail}
+          >
+            {isSending ? "Sending..." : "Send Anki Set"}
+          </Button>
+        </div>
       </div>
       {questions.map((q, i) => (
         <QuestionCard key={i} question={q} index={i} />
@@ -96,6 +110,13 @@ export function GenerateForm() {
             : err.message || "Failed to generate flashcards",
         );
       },
+    }),
+  );
+
+  const sendToEmail = useMutation(
+    trpc.ankiSet.sendToEmail.mutationOptions({
+      onSuccess: () => toast.success("Anki deck sent to your email!"),
+      onError: (err) => toast.error(err.message || "Failed to send email"),
     }),
   );
 
@@ -176,6 +197,14 @@ export function GenerateForm() {
           <QuestionList
             title={generate.data.title}
             questions={generate.data.questions}
+            isSending={sendToEmail.isPending}
+            onSendToEmail={() =>
+              sendToEmail.mutate({
+                title: generate.data.title,
+                wikipediaUrl: form.getFieldValue("url"),
+                questions: generate.data.questions,
+              })
+            }
           />
         </div>
       )}
