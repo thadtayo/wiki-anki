@@ -36,12 +36,19 @@ export const ankiSetRouter = {
       // 2. Generate .apkg
       console.log("[sendToEmail] Generating .apkg...");
       const apkgBuffer = await generateAnkiSet(ankiSet.id);
-      console.log("[sendToEmail] Generated .apkg, size:", apkgBuffer.length, "bytes");
+      console.log(
+        "[sendToEmail] Generated .apkg, size:",
+        apkgBuffer.length,
+        "bytes",
+      );
 
       // 3. Email via Resend
       const to = ctx.session.user.email;
       console.log("[sendToEmail] Sending email to:", to);
-      console.log("[sendToEmail] RESEND_API_KEY present:", !!process.env.RESEND_API_KEY);
+      console.log(
+        "[sendToEmail] RESEND_API_KEY present:",
+        !!process.env.RESEND_API_KEY,
+      );
 
       const { data, error } = await resend.emails.send({
         from: "Wiki Anki <notifications@mailer.bloomtechnologies.co>",
@@ -61,7 +68,7 @@ export const ankiSetRouter = {
         throw new Error(`Failed to send email: ${error.message}`);
       }
 
-      console.log("[sendToEmail] Email sent successfully, id:", data?.id);
+      console.log("[sendToEmail] Email sent successfully, id:", data.id);
       return { success: true };
     }),
 } satisfies TRPCRouterRecord;
