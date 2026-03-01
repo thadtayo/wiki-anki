@@ -13,7 +13,7 @@ import "~/app/styles.css";
 export const metadata: Metadata = {
   metadataBase: new URL(
     env.VERCEL_ENV === "production"
-      ? "https://turbo.t3.gg"
+      ? "https://wiki-anki-rmavbtze3-bloom-technologies.vercel.app"
       : "http://localhost:3000",
   ),
   title: "Wiki Anki",
@@ -21,13 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Wiki Anki",
     description: "Generate Anki flashcards from Wikipedia articles",
-    url: "https://create-t3-turbo.vercel.app",
+    url: "https://wiki-anki-rmavbtze3-bloom-technologies.vercel.app",
     siteName: "Wiki Anki",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@jullerino",
-    creator: "@jullerino",
   },
 };
 

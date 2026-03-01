@@ -2,10 +2,10 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "expo",
-  slug: "expo",
-  scheme: "expo",
-  version: "0.1.0",
+  name: "Wiki Anki",
+  slug: "wiki-anki",
+  scheme: "wiki-anki",
+  version: "0.1.1",
   orientation: "portrait",
   icon: "./assets/icon-light.png",
   userInterfaceStyle: "automatic",
@@ -15,11 +15,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   newArchEnabled: true,
   assetBundlePatterns: ["**/*"],
   ios: {
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "com.thadtayo.wikianki",
     supportsTablet: true,
     icon: {
       light: "./assets/icon-light.png",
       dark: "./assets/icon-dark.png",
+    },
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
     },
   },
   android: {
@@ -30,11 +33,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     edgeToEdgeEnabled: true,
   },
-  // extra: {
-  //   eas: {
-  //     projectId: "your-eas-project-id",
-  //   },
-  // },
+  extra: {
+    eas: {
+      projectId: "56e0610e-7e37-4936-9900-df303ebec78d",
+    },
+  },
   experiments: {
     tsconfigPaths: true,
     typedRoutes: true,
