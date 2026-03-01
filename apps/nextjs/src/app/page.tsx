@@ -17,6 +17,12 @@ export default function HomePage() {
           >
             Generate Flashcards from Wikipedia
           </Link>
+          <Link
+            href="/history"
+            className="text-primary text-lg font-semibold underline underline-offset-4 hover:opacity-80"
+          >
+            View History
+          </Link>
           <AuthShowcase />
         </div>
       </main>

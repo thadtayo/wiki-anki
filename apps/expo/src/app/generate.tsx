@@ -30,9 +30,9 @@ function QuestionCard(props: {
 
   if (isEditing) {
     return (
-      <View className="bg-muted flex flex-col gap-3 rounded-lg p-4">
-        <View className="flex flex-row items-start gap-3">
-          <View className="bg-primary h-7 w-7 items-center justify-center rounded-full">
+      <View className="bg-muted flex flex-col gap-3 overflow-hidden rounded-lg p-4">
+        <View className="flex flex-row items-start gap-2">
+          <View className="bg-primary h-7 w-7 shrink-0 items-center justify-center rounded-full">
             <Text className="text-primary-foreground text-sm font-bold">
               {props.index + 1}
             </Text>
@@ -77,17 +77,17 @@ function QuestionCard(props: {
   }
 
   return (
-    <View className="bg-muted flex flex-col rounded-lg p-4">
-      <View className="flex flex-row items-start gap-3">
-        <View className="bg-primary h-7 w-7 items-center justify-center rounded-full">
+    <View className="bg-muted flex flex-col overflow-hidden rounded-lg p-4">
+      <View className="flex flex-row items-start gap-2">
+        <View className="bg-primary h-7 w-7 shrink-0 items-center justify-center rounded-full">
           <Text className="text-primary-foreground text-sm font-bold">
             {props.index + 1}
           </Text>
         </View>
-        <Text className="text-foreground flex-1 text-sm font-medium">
+        <Text className="text-foreground min-w-0 flex-1 text-sm font-medium">
           {props.question.question}
         </Text>
-        <View className="flex flex-row gap-1">
+        <View className="flex shrink-0 flex-row gap-2">
           <Pressable onPress={() => setIsEditing(true)}>
             <Text className="text-primary text-xs font-semibold">Edit</Text>
           </Pressable>
@@ -220,13 +220,13 @@ export default function GenerateScreen() {
 
         {hasGenerated && !isPending && (
           <View className="mt-6 flex gap-3 pb-8">
-            <View className="flex flex-row items-baseline justify-between">
+            <View className="flex flex-row items-baseline gap-2">
               <TextInput
-                className="text-primary flex-1 text-xl font-bold"
+                className="text-primary min-w-0 flex-1 text-xl font-bold"
                 value={editableTitle}
                 onChangeText={setEditableTitle}
               />
-              <View className="flex flex-row items-center gap-3">
+              <View className="flex shrink-0 flex-row items-center gap-2">
                 <Text className="text-muted-foreground text-sm">
                   {editableQuestions.length} questions
                 </Text>

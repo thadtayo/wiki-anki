@@ -135,6 +135,13 @@ export default function Index() {
             </Text>
           </Pressable>
         </Link>
+        <Link asChild href="/history">
+          <Pressable className="my-2 items-center">
+            <Text className="text-primary text-lg font-semibold underline">
+              View History
+            </Text>
+          </Pressable>
+        </Link>
       </View>
     </SafeAreaView>
   );

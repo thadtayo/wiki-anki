@@ -1,4 +1,5 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { Resend } from "resend";
 import { z } from "zod/v4";
 
@@ -8,6 +9,27 @@ import { protectedProcedure } from "../trpc";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const ankiSetRouter = {
+  list: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.ankiSet.findMany({
+      where: { userId: ctx.session.user.id },
+      orderBy: { createdAt: "desc" },
+      include: { _count: { select: { questions: true } } },
+    });
+  }),
+
+  byId: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const ankiSet = await ctx.db.ankiSet.findFirst({
+        where: { id: input.id, userId: ctx.session.user.id },
+        include: { questions: true },
+      });
+      if (!ankiSet) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Anki set not found" });
+      }
+      return ankiSet;
+    }),
+
   sendToEmail: protectedProcedure
     .input(
       z.object({
