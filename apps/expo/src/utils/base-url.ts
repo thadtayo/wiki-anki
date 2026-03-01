@@ -4,7 +4,7 @@ import Constants from "expo-constants";
  * Extend this function when going to production by
  * setting the baseUrl to your production API URL.
  */
-const PROD_URL = "https://wiki-anki-rmavbtze3-bloom-technologies.vercel.app";
+const PROD_URL = "https://wiki-anki.vercel.app";
 
 export const getBaseUrl = () => {
   const debuggerHost = Constants.expoConfig?.hostUri;
