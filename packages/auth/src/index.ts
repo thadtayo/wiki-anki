@@ -25,7 +25,10 @@ export function initAuth<
       expo(),
       ...(options.extraPlugins ?? []),
     ],
-    trustedOrigins: ["expo://"],
+    trustedOrigins: [
+      "expo://",
+      "https://wiki-anki-rmavbtze3-bloom-technologies.vercel.app",
+    ],
     onAPIError: {
       onError(error, ctx) {
         console.error("BETTER AUTH API ERROR", error, ctx);

@@ -5,7 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: "Wiki Anki",
   slug: "wiki-anki",
   scheme: "wiki-anki",
-  version: "0.1.1",
+  version: "0.1.2",
   orientation: "portrait",
   icon: "./assets/icon-light.png",
   userInterfaceStyle: "automatic",
