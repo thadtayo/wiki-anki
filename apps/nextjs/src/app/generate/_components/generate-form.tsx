@@ -23,8 +23,64 @@ interface Question {
   answer: string;
 }
 
-function QuestionCard({ question, index }: { question: Question; index: number }) {
+function QuestionCard({
+  question,
+  index,
+  onUpdate,
+  onDelete,
+}: {
+  question: Question;
+  index: number;
+  onUpdate: (updated: Question) => void;
+  onDelete: () => void;
+}) {
   const [showAnswer, setShowAnswer] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  if (isEditing) {
+    return (
+      <div className="bg-muted flex flex-col gap-3 rounded-lg p-4">
+        <div className="flex items-start gap-3">
+          <span className="bg-primary text-primary-foreground flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+            {index + 1}
+          </span>
+          <div className="flex flex-1 flex-col gap-3">
+            <div>
+              <label className="text-muted-foreground mb-1 block text-xs font-medium">
+                Question
+              </label>
+              <Input
+                value={question.question}
+                onChange={(e) =>
+                  onUpdate({ ...question, question: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <label className="text-muted-foreground mb-1 block text-xs font-medium">
+                Answer
+              </label>
+              <Input
+                value={question.answer}
+                onChange={(e) =>
+                  onUpdate({ ...question, answer: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <Button
+                size="sm"
+                className="cursor-pointer text-xs"
+                onClick={() => setIsEditing(false)}
+              >
+                Done
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-muted flex flex-col rounded-lg p-4">
@@ -32,7 +88,25 @@ function QuestionCard({ question, index }: { question: Question; index: number }
         <span className="bg-primary text-primary-foreground flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-bold">
           {index + 1}
         </span>
-        <p className="text-sm font-medium">{question.question}</p>
+        <p className="flex-1 text-sm font-medium">{question.question}</p>
+        <div className="flex shrink-0 gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="cursor-pointer text-xs"
+            onClick={() => setIsEditing(true)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive cursor-pointer text-xs"
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       {showAnswer ? (
         <div className="mt-3 ml-10">
@@ -67,24 +141,34 @@ function QuestionList({
   questions,
   onSendToEmail,
   isSending,
+  onUpdateTitle,
+  onUpdateQuestion,
+  onDeleteQuestion,
 }: {
   title: string;
   questions: Question[];
   onSendToEmail: () => void;
   isSending: boolean;
+  onUpdateTitle: (title: string) => void;
+  onUpdateQuestion: (index: number, updated: Question) => void;
+  onDeleteQuestion: (index: number) => void;
 }) {
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-primary text-2xl font-bold">{title}</h2>
-        <div className="flex items-center gap-3">
+      <div className="flex items-baseline justify-between gap-3">
+        <Input
+          value={title}
+          onChange={(e) => onUpdateTitle(e.target.value)}
+          className="text-primary border-transparent bg-transparent text-2xl font-bold focus:border-input focus:bg-background"
+        />
+        <div className="flex shrink-0 items-center gap-3">
           <span className="text-muted-foreground text-sm">
             {questions.length} questions
           </span>
           <Button
             variant="outline"
             size="sm"
-            disabled={isSending}
+            disabled={isSending || questions.length === 0}
             onClick={onSendToEmail}
           >
             {isSending ? "Sending..." : "Send Anki Set"}
@@ -92,7 +176,13 @@ function QuestionList({
         </div>
       </div>
       {questions.map((q, i) => (
-        <QuestionCard key={i} question={q} index={i} />
+        <QuestionCard
+          key={i}
+          question={q}
+          index={i}
+          onUpdate={(updated) => onUpdateQuestion(i, updated)}
+          onDelete={() => onDeleteQuestion(i)}
+        />
       ))}
     </div>
   );
@@ -100,9 +190,17 @@ function QuestionList({
 
 export function GenerateForm() {
   const trpc = useTRPC();
+  const [editableQuestions, setEditableQuestions] = useState<Question[]>([]);
+  const [editableTitle, setEditableTitle] = useState("");
+  const [hasGenerated, setHasGenerated] = useState(false);
 
   const generate = useMutation(
     trpc.generate.fromWikipedia.mutationOptions({
+      onSuccess: (data) => {
+        setEditableQuestions(data.questions.map((q) => ({ ...q })));
+        setEditableTitle(data.title);
+        setHasGenerated(true);
+      },
       onError: (err) => {
         toast.error(
           err.data?.code === "UNAUTHORIZED"
@@ -192,17 +290,26 @@ export function GenerateForm() {
         </div>
       )}
 
-      {generate.data && (
+      {hasGenerated && !generate.isPending && (
         <div className="mt-8">
           <QuestionList
-            title={generate.data.title}
-            questions={generate.data.questions}
+            title={editableTitle}
+            questions={editableQuestions}
             isSending={sendToEmail.isPending}
+            onUpdateTitle={setEditableTitle}
+            onUpdateQuestion={(index, updated) =>
+              setEditableQuestions((prev) =>
+                prev.map((q, i) => (i === index ? updated : q)),
+              )
+            }
+            onDeleteQuestion={(index) =>
+              setEditableQuestions((prev) => prev.filter((_, i) => i !== index))
+            }
             onSendToEmail={() =>
               sendToEmail.mutate({
-                title: generate.data.title,
+                title: editableTitle,
                 wikipediaUrl: form.getFieldValue("url"),
-                questions: generate.data.questions,
+                questions: editableQuestions,
               })
             }
           />
