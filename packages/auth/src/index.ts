@@ -21,14 +21,8 @@ export function initAuth<
     emailAndPassword: {
       enabled: true,
     },
-    plugins: [
-      expo(),
-      ...(options.extraPlugins ?? []),
-    ],
-    trustedOrigins: [
-      "expo://",
-      "https://wiki-anki-rmavbtze3-bloom-technologies.vercel.app",
-    ],
+    plugins: [expo(), ...(options.extraPlugins ?? [])],
+    trustedOrigins: ["expo://", "https://wiki-anki.vercel.app"],
     onAPIError: {
       onError(error, ctx) {
         console.error("BETTER AUTH API ERROR", error, ctx);

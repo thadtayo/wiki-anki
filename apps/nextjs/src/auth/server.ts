@@ -8,7 +8,7 @@ import { initAuth } from "@acme/auth";
 
 import { env } from "~/env";
 
-const PROD_URL = "https://wiki-anki-rmavbtze3-bloom-technologies.vercel.app";
+const PROD_URL = "https://wiki-anki.vercel.app";
 
 const baseUrl =
   env.VERCEL_ENV === "production"

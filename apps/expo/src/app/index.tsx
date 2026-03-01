@@ -50,6 +50,7 @@ function MobileAuth() {
           password,
         });
         if (res.error) {
+          console.log(JSON.stringify(res.error, null, 2));
           setError(res.error.message ?? "Sign in failed");
           return;
         }
