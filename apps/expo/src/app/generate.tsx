@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   ScrollView,
   Text,
@@ -124,9 +125,18 @@ function QuestionCard(props: {
 
 export default function GenerateScreen() {
   const [url, setUrl] = useState("");
+  const [urlError, setUrlError] = useState("");
   const [editableQuestions, setEditableQuestions] = useState<Question[]>([]);
   const [editableTitle, setEditableTitle] = useState("");
   const [hasGenerated, setHasGenerated] = useState(false);
+
+  const validateUrl = (value: string): string | null => {
+    const regex = /^https?:\/\/[a-z]{2,}\.wikipedia\.org\/wiki\/.+/i;
+    if (!regex.test(value)) {
+      return "Must be a valid Wikipedia article URL (e.g. https://en.wikipedia.org/wiki/Example)";
+    }
+    return null;
+  };
 
   const { mutate, error, isPending } = useMutation(
     trpc.generate.fromWikipedia.mutationOptions({
@@ -135,6 +145,14 @@ export default function GenerateScreen() {
         setEditableTitle(data.title);
         setHasGenerated(true);
       },
+    }),
+  );
+
+  const sendToEmail = useMutation(
+    trpc.ankiSet.sendToEmail.mutationOptions({
+      onSuccess: () => Alert.alert("Success", "Anki deck sent to your email!"),
+      onError: (err) =>
+        Alert.alert("Error", err.message || "Failed to send email"),
     }),
   );
 
@@ -153,16 +171,29 @@ export default function GenerateScreen() {
           <TextInput
             className="border-input bg-background text-foreground items-center rounded-md border px-3 text-lg leading-tight"
             value={url}
-            onChangeText={setUrl}
+            onChangeText={(text) => {
+              setUrl(text);
+              if (urlError) setUrlError("");
+            }}
             placeholder="https://en.wikipedia.org/wiki/..."
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="url"
           />
+          {urlError ? (
+            <Text className="text-destructive text-sm">{urlError}</Text>
+          ) : null}
           <Pressable
             className="bg-primary flex items-center rounded-sm p-2"
             disabled={isPending}
-            onPress={() => mutate({ url })}
+            onPress={() => {
+              const validationError = validateUrl(url);
+              if (validationError) {
+                setUrlError(validationError);
+                return;
+              }
+              mutate({ url });
+            }}
           >
             <Text className="text-foreground font-semibold">
               {isPending ? "Generating..." : "Generate Flashcards"}
@@ -195,9 +226,34 @@ export default function GenerateScreen() {
                 value={editableTitle}
                 onChangeText={setEditableTitle}
               />
-              <Text className="text-muted-foreground text-sm">
-                {editableQuestions.length} questions
-              </Text>
+              <View className="flex flex-row items-center gap-3">
+                <Text className="text-muted-foreground text-sm">
+                  {editableQuestions.length} questions
+                </Text>
+                <Pressable
+                  className="border-input rounded-md border px-3 py-1.5"
+                  disabled={
+                    sendToEmail.isPending || editableQuestions.length === 0
+                  }
+                  onPress={() =>
+                    sendToEmail.mutate({
+                      title: editableTitle,
+                      wikipediaUrl: url,
+                      questions: editableQuestions,
+                    })
+                  }
+                >
+                  <Text
+                    className={`text-sm font-semibold ${
+                      sendToEmail.isPending || editableQuestions.length === 0
+                        ? "text-muted-foreground"
+                        : "text-foreground"
+                    }`}
+                  >
+                    {sendToEmail.isPending ? "Sending..." : "Send Anki Set"}
+                  </Text>
+                </Pressable>
+              </View>
             </View>
             {editableQuestions.map((q, i) => (
               <QuestionCard
