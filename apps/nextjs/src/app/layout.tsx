@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Merriweather } from "next/font/google";
 
 import { cn } from "@acme/ui";
 import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
@@ -16,13 +16,13 @@ export const metadata: Metadata = {
       ? "https://turbo.t3.gg"
       : "http://localhost:3000",
   ),
-  title: "Create T3 Turbo",
-  description: "Simple monorepo with shared backend for web & mobile apps",
+  title: "Wiki Anki",
+  description: "Generate Anki flashcards from Wikipedia articles",
   openGraph: {
-    title: "Create T3 Turbo",
-    description: "Simple monorepo with shared backend for web & mobile apps",
+    title: "Wiki Anki",
+    description: "Generate Anki flashcards from Wikipedia articles",
     url: "https://create-t3-turbo.vercel.app",
-    siteName: "Create T3 Turbo",
+    siteName: "Wiki Anki",
   },
   twitter: {
     card: "summary_large_image",
@@ -33,18 +33,19 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: light)", color: "#F8FAFC" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
 
-const geistSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-inter",
 });
-const geistMono = Geist_Mono({
+const merriweather = Merriweather({
   subsets: ["latin"],
-  variable: "--font-geist-mono",
+  weight: ["400", "700", "900"],
+  variable: "--font-merriweather",
 });
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -53,8 +54,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body
         className={cn(
           "bg-background text-foreground min-h-screen font-sans antialiased",
-          geistSans.variable,
-          geistMono.variable,
+          inter.variable,
+          merriweather.variable,
         )}
       >
         <ThemeProvider>

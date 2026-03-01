@@ -32,7 +32,7 @@ function QuestionCard(props: {
       <View className="bg-muted flex flex-col gap-3 rounded-lg p-4">
         <View className="flex flex-row items-start gap-3">
           <View className="bg-primary h-7 w-7 items-center justify-center rounded-full">
-            <Text className="text-sm font-bold text-white">
+            <Text className="text-primary-foreground text-sm font-bold">
               {props.index + 1}
             </Text>
           </View>
@@ -67,7 +67,7 @@ function QuestionCard(props: {
               className="bg-primary self-start rounded-md px-3 py-1.5"
               onPress={() => setIsEditing(false)}
             >
-              <Text className="text-sm font-semibold text-white">Done</Text>
+              <Text className="text-primary-foreground text-sm font-semibold">Done</Text>
             </Pressable>
           </View>
         </View>
@@ -79,7 +79,7 @@ function QuestionCard(props: {
     <View className="bg-muted flex flex-col rounded-lg p-4">
       <View className="flex flex-row items-start gap-3">
         <View className="bg-primary h-7 w-7 items-center justify-center rounded-full">
-          <Text className="text-sm font-bold text-white">
+          <Text className="text-primary-foreground text-sm font-bold">
             {props.index + 1}
           </Text>
         </View>
@@ -142,7 +142,7 @@ export default function GenerateScreen() {
     <SafeAreaView className="bg-background">
       <Stack.Screen options={{ title: "Generate Flashcards" }} />
       <ScrollView className="h-full w-full p-4">
-        <Text className="text-foreground pb-2 text-center text-3xl font-bold">
+        <Text className="text-foreground pb-2 text-center font-[Merriweather_700Bold] text-3xl font-bold">
           Wiki <Text className="text-primary">Flashcards</Text>
         </Text>
         <Text className="text-muted-foreground pb-4 text-center text-sm">
@@ -180,7 +180,7 @@ export default function GenerateScreen() {
 
         {isPending && (
           <View className="mt-8 items-center gap-2">
-            <ActivityIndicator size="large" color="#c03484" />
+            <ActivityIndicator size="large" color="#1E293B" />
             <Text className="text-muted-foreground text-sm">
               Generating flashcards... this may take 10-15 seconds
             </Text>

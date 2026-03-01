@@ -6,7 +6,7 @@ export default function GeneratePage() {
     <HydrateClient>
       <main className="container h-screen py-16">
         <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          <h1 className="font-serif text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Wiki <span className="text-primary">Flashcards</span>
           </h1>
           <p className="text-muted-foreground text-lg">

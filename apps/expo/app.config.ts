@@ -26,7 +26,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: "your.bundle.identifier",
     adaptiveIcon: {
       foregroundImage: "./assets/icon-light.png",
-      backgroundColor: "#1F104A",
+      backgroundColor: "#1E293B",
     },
     edgeToEdgeEnabled: true,
   },
@@ -48,10 +48,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
-        backgroundColor: "#E4E4E7",
+        backgroundColor: "#F8FAFC",
         image: "./assets/icon-light.png",
         dark: {
-          backgroundColor: "#18181B",
+          backgroundColor: "#0F172A",
           image: "./assets/icon-dark.png",
         },
       },
